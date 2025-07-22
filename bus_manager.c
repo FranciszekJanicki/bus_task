@@ -74,13 +74,24 @@ static bool bus_manager_receive_bus_notify(bus_notify_t* notify)
                            pdMS_TO_TICKS(10)) == pdPASS;
 }
 
-static bus_err_t bus_manager_notify_start_handler(bus_manager_t* manager)
+static bus_err_t bus_manager_notify_start_handler(bus_manager_t* manager,
+                                                  bus_action_t action)
 {
     if (manager->is_running) {
         return BUS_ERR_ALREADY_RUNNING;
     }
 
     manager->is_running = true;
+
+    if (action == BUS_ACTION_RECEIVE) {
+        return bus_manager_bus_receive_data(manager,
+                                            manager->config.bus_buffer,
+                                            manager->config.bus_buffer_size);
+    } else if (action == BUS_ACTION_TRANSMIT) {
+        return bus_manager_bus_transmit_data(manager,
+                                             manager->config.bus_buffer,
+                                             manager->config.bus_buffer_size);
+    }
 
     return BUS_ERR_OK;
 }
@@ -151,7 +162,11 @@ static bus_err_t bus_manager_notify_handler(bus_manager_t* manager,
                                             bus_notify_t notify)
 {
     if (notify & BUS_NOTIFY_START) {
-        return bus_manager_notify_start_handler(manager);
+        for (uint8_t action = 0U; action < BUS_ACTION_NONE; ++action) {
+            if (notify & (1 << action)) {
+                return bus_manager_notify_start_handler(manager, action);
+            }
+        }
     }
     if (notify & BUS_NOTIFY_START) {
         return bus_manager_notify_stop_handler(manager);
@@ -179,7 +194,6 @@ bus_err_t bus_manager_process(bus_manager_t* manager)
 }
 
 bus_err_t bus_manager_initialize(bus_manager_t* manager,
-                                 bus_action_t action,
                                  bus_config_t const* config,
                                  bus_interface_t const* interface)
 {
@@ -191,13 +205,5 @@ bus_err_t bus_manager_initialize(bus_manager_t* manager,
     memcpy(&manager->config, config, sizeof(*config));
     memcpy(&manager->interface, interface, sizeof(*interface));
 
-    bus_err_t err = bus_manager_bus_initialize(manager);
-
-    if (action == BUS_ACTION_RECEIVE) {
-        err |= bus_manager_notify_receive_done_handler(manager);
-    } else if (action == BUS_ACTION_TRANSMIT) {
-        err |= bus_manager_notify_transmit_done_handler(manager);
-    }
-
-    return err;
+    return bus_manager_bus_initialize(manager);
 }

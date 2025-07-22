@@ -8,7 +8,6 @@
 #include <stdint.h>
 
 typedef struct {
-    bus_action_t action;
     bus_config_t config;
     bus_interface_t interface;
 } bus_task_ctx_t;

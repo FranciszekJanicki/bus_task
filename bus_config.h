@@ -19,19 +19,20 @@ typedef enum {
 } bus_err_t;
 
 typedef enum {
-    BUS_NOTIFY_START = (1 << 0),
-    BUS_NOTIFY_STOP = (1 << 1),
-    BUS_NOTIFY_TRANSMIT_DONE = (1 << 2),
-    BUS_NOTIFY_RECEIVE_DONE = (1 << 3),
-    BUS_NOTIFY_ALL = (BUS_NOTIFY_START | BUS_NOTIFY_STOP |
-                      BUS_NOTIFY_TRANSMIT_DONE | BUS_NOTIFY_RECEIVE_DONE),
-} bus_notify_t;
-
-typedef enum {
     BUS_ACTION_TRANSMIT,
     BUS_ACTION_RECEIVE,
     BUS_ACTION_NONE,
 } bus_action_t;
+
+typedef enum {
+    BUS_NOTIFY_START = ((1 << BUS_ACTION_RECEIVE) | (1 << BUS_ACTION_TRANSMIT) |
+                        (1 << BUS_ACTION_NONE)),
+    BUS_NOTIFY_STOP = (1 << 3),
+    BUS_NOTIFY_TRANSMIT_DONE = (1 << 4),
+    BUS_NOTIFY_RECEIVE_DONE = (1 << 5),
+    BUS_NOTIFY_ALL = (BUS_NOTIFY_START | BUS_NOTIFY_STOP |
+                      BUS_NOTIFY_TRANSMIT_DONE | BUS_NOTIFY_RECEIVE_DONE),
+} bus_notify_t;
 
 typedef struct {
     uint8_t* bus_buffer;

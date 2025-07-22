@@ -15,7 +15,6 @@ typedef struct {
 } bus_manager_t;
 
 bus_err_t bus_manager_initialize(bus_manager_t* manager,
-                                 bus_action_t action,
                                  bus_config_t const* config,
                                  bus_interface_t const* interface);
 bus_err_t bus_manager_process(bus_manager_t* manager);

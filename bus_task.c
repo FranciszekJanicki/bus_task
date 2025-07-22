@@ -13,10 +13,7 @@ static void bus_task_func(void* ctx)
     bus_task_ctx_t* task_ctx = (bus_task_ctx_t*)ctx;
 
     bus_manager_t manager;
-    bus_manager_initialize(&manager,
-                           task_ctx->action,
-                           &task_ctx->config,
-                           &task_ctx->interface);
+    bus_manager_initialize(&manager, &task_ctx->config, &task_ctx->interface);
 
     while (1) {
         bus_manager_process(&manager);
