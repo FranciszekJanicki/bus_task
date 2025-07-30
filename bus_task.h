@@ -7,6 +7,10 @@
 #include "task.h"
 #include <stdint.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct {
     bus_config_t config;
     bus_interface_t interface;
@@ -26,5 +30,9 @@ StreamBufferHandle_t bus_task_create_stream_buffer(
 
 void bus_task_receive_done_callback(TaskHandle_t bus_task);
 void bus_task_transmit_done_callback(TaskHandle_t bus_task);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // BUS_TASK_BUS_TASK_H

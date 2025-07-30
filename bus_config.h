@@ -7,6 +7,10 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef enum {
     BUS_ERR_OK,
     BUS_ERR_FAIL,
@@ -47,5 +51,9 @@ typedef struct {
     bus_err_t (*bus_receive_data)(void*, uint8_t*, size_t);
     bus_err_t (*bus_transmit_data)(void*, uint8_t const*, size_t);
 } bus_interface_t;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // BUS_TASK_BUS_NOTIFY_H
